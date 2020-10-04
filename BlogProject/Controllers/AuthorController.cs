@@ -16,10 +16,10 @@ namespace BlogProject.Controllers
         }
 
         //GET : /Author/List
-        public ActionResult List()
+        public ActionResult List(string SearchKey = null)
         {
             AuthorDataController controller = new AuthorDataController();
-            IEnumerable<Author> Authors = controller.ListAuthors();
+            IEnumerable<Author> Authors = controller.ListAuthors(SearchKey);
             return View(Authors);
         }
 

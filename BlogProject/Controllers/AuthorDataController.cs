@@ -23,7 +23,8 @@ namespace BlogProject.Controllers
         /// A list of authors (first names and last names)
         /// </returns>
         [HttpGet]
-        public IEnumerable<Author> ListAuthors()
+        [Route("api/AuthorData/ListAuthors/{SearchKey?}")]
+        public IEnumerable<Author> ListAuthors(string SearchKey=null)
         {
             //Create an instance of a connection
             MySqlConnection Conn = Blog.AccessDatabase();
@@ -35,7 +36,10 @@ namespace BlogProject.Controllers
             MySqlCommand cmd = Conn.CreateCommand();
 
             //SQL QUERY
-            cmd.CommandText = "Select * from Authors";
+            cmd.CommandText = "Select * from Authors where lower(authorfname) like lower(@key) or lower(authorlname) like lower(@key) or lower(concat(authorfname, ' ', authorlname)) like lower(@key)";
+
+            cmd.Parameters.AddWithValue("@key", "%" + SearchKey + "%");
+            cmd.Prepare();
 
             //Gather Result Set of Query into a variable
             MySqlDataReader ResultSet = cmd.ExecuteReader();
@@ -86,7 +90,9 @@ namespace BlogProject.Controllers
             MySqlCommand cmd = Conn.CreateCommand();
 
             //SQL QUERY
-            cmd.CommandText = "Select * from Authors where authorid = "+id;
+            cmd.CommandText = "Select * from Authors where authorid = @id";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
 
             //Gather Result Set of Query into a variable
             MySqlDataReader ResultSet = cmd.ExecuteReader();
