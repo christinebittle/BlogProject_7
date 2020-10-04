@@ -23,7 +23,7 @@ namespace BlogProject.Controllers
         /// A list of authors (first names and last names)
         /// </returns>
         [HttpGet]
-        public IEnumerable<string> ListAuthors()
+        public IEnumerable<Author> ListAuthors()
         {
             //Create an instance of a connection
             MySqlConnection Conn = Blog.AccessDatabase();
@@ -40,23 +40,73 @@ namespace BlogProject.Controllers
             //Gather Result Set of Query into a variable
             MySqlDataReader ResultSet = cmd.ExecuteReader();
 
-            //Create an empty list of Author Names
-            List<String> AuthorNames = new List<string>{};
+            //Create an empty list of Authors
+            List<Author> Authors = new List<Author>{};
 
             //Loop Through Each Row the Result Set
             while (ResultSet.Read())
             {
                 //Access Column information by the DB column name as an index
-                string AuthorName = ResultSet["authorfname"] + " " + ResultSet["authorlname"];
+                int AuthorId = (int)ResultSet["authorid"];
+                string AuthorFname = (string)ResultSet["authorfname"];
+                string AuthorLname = (string)ResultSet["authorlname"];
+                string AuthorBio = (string)ResultSet["authorbio"];
+
+                Author NewAuthor = new Author();
+                NewAuthor.AuthorId = AuthorId;
+                NewAuthor.AuthorFname = AuthorFname;
+                NewAuthor.AuthorLname = AuthorLname;
+                NewAuthor.AuthorBio = AuthorBio;
+
                 //Add the Author Name to the List
-                AuthorNames.Add(AuthorName);
+                Authors.Add(NewAuthor);
             }
 
             //Close the connection between the MySQL Database and the WebServer
             Conn.Close();
 
             //Return the final list of author names
-            return AuthorNames;
+            return Authors;
+        }
+
+
+
+        [HttpGet]
+        public Author FindAuthor(int id)
+        {
+            Author NewAuthor = new Author();
+
+            //Create an instance of a connection
+            MySqlConnection Conn = Blog.AccessDatabase();
+
+            //Open the connection between the web server and database
+            Conn.Open();
+
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            //SQL QUERY
+            cmd.CommandText = "Select * from Authors where authorid = "+id;
+
+            //Gather Result Set of Query into a variable
+            MySqlDataReader ResultSet = cmd.ExecuteReader();
+
+            while (ResultSet.Read())
+            {
+                //Access Column information by the DB column name as an index
+                int AuthorId = (int)ResultSet["authorid"];
+                string AuthorFname = (string)ResultSet["authorfname"];
+                string AuthorLname = (string)ResultSet["authorlname"];
+                string AuthorBio = (string)ResultSet["authorbio"];
+
+                NewAuthor.AuthorId = AuthorId;
+                NewAuthor.AuthorFname = AuthorFname;
+                NewAuthor.AuthorLname = AuthorLname;
+                NewAuthor.AuthorBio = AuthorBio;
+            }
+
+
+            return NewAuthor;
         }
 
     }
