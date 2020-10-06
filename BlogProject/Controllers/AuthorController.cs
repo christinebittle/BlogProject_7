@@ -45,6 +45,7 @@ namespace BlogProject.Controllers
 
 
         //POST : /Author/Delete/{id}
+        [HttpPost]
         public ActionResult Delete(int id)
         {
             AuthorDataController controller = new AuthorDataController();
