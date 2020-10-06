@@ -110,9 +110,39 @@ namespace BlogProject.Controllers
                 NewAuthor.AuthorLname = AuthorLname;
                 NewAuthor.AuthorBio = AuthorBio;
             }
-
+            Conn.Close();
 
             return NewAuthor;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <example>POST : /api/AuthorData/DeleteAuthor/3</example>
+        [HttpPost]
+        public void DeleteAuthor(int id)
+        {
+            //Create an instance of a connection
+            MySqlConnection Conn = Blog.AccessDatabase();
+
+            //Open the connection between the web server and database
+            Conn.Open();
+
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            //SQL QUERY
+            cmd.CommandText = "Delete from authors where authorid=@id";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Prepare();
+
+            cmd.ExecuteNonQuery();
+
+            Conn.Close();
+
+
         }
 
     }

@@ -33,5 +33,24 @@ namespace BlogProject.Controllers
             return View(NewAuthor);
         }
 
+        //GET : /Author/DeleteConfirm/{id}
+        public ActionResult DeleteConfirm(int id)
+        {
+            AuthorDataController controller = new AuthorDataController();
+            Author NewAuthor = controller.FindAuthor(id);
+
+
+            return View(NewAuthor);
+        }
+
+
+        //POST : /Author/Delete/{id}
+        public ActionResult Delete(int id)
+        {
+            AuthorDataController controller = new AuthorDataController();
+            controller.DeleteAuthor(id);
+            return RedirectToAction("List");
+        }
+
     }
 }
