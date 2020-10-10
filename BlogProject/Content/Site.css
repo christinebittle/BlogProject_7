@@ -47,3 +47,21 @@ nav{
 .listitem {
     margin: 10px 0;
 }
+
+.inputrow{
+    margin-bottom:15px;
+    width:40%;
+    overflow:hidden;
+}
+.inputrow input, .inputrow textarea{
+    float:right;
+}
+.inputrow textarea{
+    width:100%;
+    max-width:none;
+    float:none;
+}
+.inputrow input[type="submit"]{
+    float:none;
+    margin-top:50px;
+}
