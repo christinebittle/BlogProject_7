@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BlogProject.Models;
+using System.Diagnostics;
 
 namespace BlogProject.Controllers
 {
@@ -50,6 +51,36 @@ namespace BlogProject.Controllers
         {
             AuthorDataController controller = new AuthorDataController();
             controller.DeleteAuthor(id);
+            return RedirectToAction("List");
+        }
+
+        //GET : /Author/New
+        public ActionResult New()
+        {
+            return View();
+        }
+
+        //POST : /Author/Create
+        [HttpPost]
+        public ActionResult Create(string AuthorFname, string AuthorLname, string AuthorBio, string AuthorEmail)
+        {
+            //Identify that this method is running
+            //Identify the inputs provided from the form
+
+            Debug.WriteLine("I have accessed the Create Method!");
+            Debug.WriteLine(AuthorFname);
+            Debug.WriteLine(AuthorLname);
+            Debug.WriteLine(AuthorBio);
+
+            Author NewAuthor = new Author();
+            NewAuthor.AuthorFname = AuthorFname;
+            NewAuthor.AuthorLname = AuthorLname;
+            NewAuthor.AuthorBio = AuthorBio;
+            NewAuthor.AuthorEmail = AuthorEmail;
+
+            AuthorDataController controller = new AuthorDataController();
+            controller.AddAuthor(NewAuthor);
+
             return RedirectToAction("List");
         }
 

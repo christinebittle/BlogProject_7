@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "New";
+}
+
+<h2>New Author</h2>
+<form method="POST" action="/Author/Create">
+    <div>
+        <label for="AuthorFname">First Name:</label>
+        <input type="text" id="AuthorFname" name="AuthorFname" />
+
+    </div>
+    <div>
+        <label for="AuthorLname">Last Name:</label>
+        <input type="text" id="AuthorLname" name="AuthorLname" />
+
+    </div>
+    <div>
+        <label for="AuthorBio">Biography:</label>
+        <textarea id="AuthorBio" name="AuthorBio"></textarea>
+    </div>
+    <div>
+        <label for="AuthorEmail">Email:</label>
+        <input type="text" id="AuthorEmail" name="AuthorEmail"/>
+    </div>
+    <div>
+        <input type="submit" value="Create Author" />
+    </div>
+</form>
+

@@ -12,5 +12,10 @@ namespace BlogProject.Models
         public string AuthorFname;
         public string AuthorLname;
         public string AuthorBio;
+        public DateTime AuthorJoinDate;
+        public string AuthorEmail;
+
+        //parameter-less constructor function
+        public Author() { }
     }
 }

@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using BlogProject.Models;
 using MySql.Data.MySqlClient;
+using System.Diagnostics;
 
 namespace BlogProject.Controllers
 {
@@ -104,11 +105,13 @@ namespace BlogProject.Controllers
                 string AuthorFname = (string)ResultSet["authorfname"];
                 string AuthorLname = (string)ResultSet["authorlname"];
                 string AuthorBio = (string)ResultSet["authorbio"];
+                DateTime AuthorJoinDate = (DateTime)ResultSet["authorjoindate"];
 
                 NewAuthor.AuthorId = AuthorId;
                 NewAuthor.AuthorFname = AuthorFname;
                 NewAuthor.AuthorLname = AuthorLname;
                 NewAuthor.AuthorBio = AuthorBio;
+                NewAuthor.AuthorJoinDate = AuthorJoinDate;
             }
             Conn.Close();
 
@@ -143,6 +146,33 @@ namespace BlogProject.Controllers
             Conn.Close();
 
 
+        }
+
+        [HttpPost]
+        public void AddAuthor([FromBody]Author NewAuthor)
+        {
+            //Create an instance of a connection
+            MySqlConnection Conn = Blog.AccessDatabase();
+
+            Debug.WriteLine(NewAuthor.AuthorFname);
+
+            //Open the connection between the web server and database
+            Conn.Open();
+
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            //SQL QUERY
+            cmd.CommandText = "insert into authors (authorfname, authorlname, authorbio, authorjoindate, authoremail) values (@AuthorFname,@AuthorLname,@AuthorBio, CURRENT_DATE(), @AuthorEmail)";
+            cmd.Parameters.AddWithValue("@AuthorFname", NewAuthor.AuthorFname);
+            cmd.Parameters.AddWithValue("@AuthorLname", NewAuthor.AuthorLname);
+            cmd.Parameters.AddWithValue("@AuthorBio", NewAuthor.AuthorBio);
+            cmd.Parameters.AddWithValue("@AuthorEmail", NewAuthor.AuthorEmail);
+            cmd.Prepare();
+
+            cmd.ExecuteNonQuery();
+
+            Conn.Close();
         }
 
     }

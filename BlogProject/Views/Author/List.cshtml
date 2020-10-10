@@ -4,10 +4,13 @@
 }
 
 <div id="containerlist">
+    <nav>
+        <a class="navlink" href="/Author/New">New Author</a>
+    </nav>
     <h2>List of Authors</h2>
     <form action="/Author/List" method="GET">
-        <input type="text" name="SearchKey" autocomplete="off"/>
-        <input type="submit" value="Search"/>
+        <input type="text" name="SearchKey" autocomplete="off" />
+        <input type="submit" value="Search" />
     </form>
     @foreach (var author in Model)
     {
