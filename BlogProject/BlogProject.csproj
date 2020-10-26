@@ -267,6 +267,7 @@
     <Content Include="Views\Author\Show.cshtml" />
     <Content Include="Views\Author\DeleteConfirm.cshtml" />
     <Content Include="Views\Author\New.cshtml" />
+    <Content Include="Views\Author\Update.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

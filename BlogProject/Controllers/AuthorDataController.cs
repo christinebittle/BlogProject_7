@@ -111,12 +111,14 @@ namespace BlogProject.Controllers
                 string AuthorFname = ResultSet["authorfname"].ToString();
                 string AuthorLname = ResultSet["authorlname"].ToString();
                 string AuthorBio = ResultSet["authorbio"].ToString();
+                string AuthorEmail = ResultSet["authoremail"].ToString();
                 DateTime AuthorJoinDate = (DateTime)ResultSet["authorjoindate"];
 
                 NewAuthor.AuthorId = AuthorId;
                 NewAuthor.AuthorFname = AuthorFname;
                 NewAuthor.AuthorLname = AuthorLname;
                 NewAuthor.AuthorBio = AuthorBio;
+                NewAuthor.AuthorEmail = AuthorEmail;
                 NewAuthor.AuthorJoinDate = AuthorJoinDate;
             }
             Conn.Close();
@@ -155,9 +157,9 @@ namespace BlogProject.Controllers
         }
 
         /// <summary>
-        /// Adds an Author to the MySQL Database.
+        /// Adds an Author to the MySQL Database. Non-Deterministic.
         /// </summary>
-        /// <param name="NewAuthor">An object with fields that map to the columns of the author's table. Non-Deterministic.</param>
+        /// <param name="NewAuthor">An object with fields that map to the columns of the author's table. </param>
         /// <example>
         /// POST api/AuthorData/AddAuthor 
         /// FORM DATA / POST DATA / REQUEST BODY 
@@ -194,6 +196,49 @@ namespace BlogProject.Controllers
 
             Conn.Close();
 
+
+
+        }
+
+        /// <summary>
+        /// Updates an Author on the MySQL Database. Non-Deterministic.
+        /// </summary>
+        /// <param name="AuthorInfo">An object with fields that map to the columns of the author's table.</param>
+        /// <example>
+        /// POST api/AuthorData/UpdateAuthor/208 
+        /// FORM DATA / POST DATA / REQUEST BODY 
+        /// {
+        ///	"AuthorFname":"Christine",
+        ///	"AuthorLname":"Bittle",
+        ///	"AuthorBio":"Likes Coding!",
+        ///	"AuthorEmail":"christine@test.ca"
+        /// }
+        /// </example>
+        public void UpdateAuthor(int id, [FromBody]Author AuthorInfo)
+        {
+            //Create an instance of a connection
+            MySqlConnection Conn = Blog.AccessDatabase();
+
+            Debug.WriteLine(AuthorInfo.AuthorFname);
+
+            //Open the connection between the web server and database
+            Conn.Open();
+
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            //SQL QUERY
+            cmd.CommandText = "update authors set authorfname=@AuthorFname, authorlname=@AuthorLname, authorbio=@AuthorBio, authoremail=@AuthorEmail  where authorid=@AuthorId";
+            cmd.Parameters.AddWithValue("@AuthorFname", AuthorInfo.AuthorFname);
+            cmd.Parameters.AddWithValue("@AuthorLname", AuthorInfo.AuthorLname);
+            cmd.Parameters.AddWithValue("@AuthorBio", AuthorInfo.AuthorBio);
+            cmd.Parameters.AddWithValue("@AuthorEmail", AuthorInfo.AuthorEmail);
+            cmd.Parameters.AddWithValue("@AuthorId", id);
+            cmd.Prepare();
+
+            cmd.ExecuteNonQuery();
+
+            Conn.Close();
 
 
         }

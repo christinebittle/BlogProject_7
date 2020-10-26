@@ -28,10 +28,10 @@ namespace BlogProject.Controllers
         public ActionResult Show(int id)
         {
             AuthorDataController controller = new AuthorDataController();
-            Author NewAuthor = controller.FindAuthor(id);
+            Author SelectedAuthor = controller.FindAuthor(id);
             
 
-            return View(NewAuthor);
+            return View(SelectedAuthor);
         }
 
         //GET : /Author/DeleteConfirm/{id}
@@ -82,6 +82,56 @@ namespace BlogProject.Controllers
             controller.AddAuthor(NewAuthor);
 
             return RedirectToAction("List");
+        }
+
+
+        /// <summary>
+        /// Routes to a dynamically generated "Author Update" Page. Gathers information from the database.
+        /// </summary>
+        /// <param name="id">Id of the Author</param>
+        /// <returns>A dynamic "Update Author" webpage which provides the current information of the author and asks the user for new information as part of a form.</returns>
+        /// <example>GET : /Author/Update/5</example>
+        public ActionResult Update(int id)
+        {
+            AuthorDataController controller = new AuthorDataController();
+            Author SelectedAuthor = controller.FindAuthor(id);
+
+            return View(SelectedAuthor);
+        }
+
+
+        /// <summary>
+        /// Receives a POST request containing information about an existing author in the system, with new values. Conveys this information to the API, and redirects to the "Author Show" page of our updated author.
+        /// </summary>
+        /// <param name="id">Id of the Author to update</param>
+        /// <param name="AuthorFname">The updated first name of the author</param>
+        /// <param name="AuthorLname">The updated last name of the author</param>
+        /// <param name="AuthorBio">The updated bio of the author.</param>
+        /// <param name="AuthorEmail">The updated email of the author.</param>
+        /// <returns>A dynamic webpage which provides the current information of the author.</returns>
+        /// <example>
+        /// POST : /Author/Update/10
+        /// FORM DATA / POST DATA / REQUEST BODY 
+        /// {
+        ///	"AuthorFname":"Christine",
+        ///	"AuthorLname":"Bittle",
+        ///	"AuthorBio":"Loves Coding!",
+        ///	"AuthorEmail":"christine@test.ca"
+        /// }
+        /// </example>
+        [HttpPost]
+        public ActionResult Update(int id, string AuthorFname, string AuthorLname, string AuthorBio, string AuthorEmail)
+        {
+            Author AuthorInfo = new Author();
+            AuthorInfo.AuthorFname = AuthorFname;
+            AuthorInfo.AuthorLname = AuthorLname;
+            AuthorInfo.AuthorBio = AuthorBio;
+            AuthorInfo.AuthorEmail = AuthorEmail;
+
+            AuthorDataController controller = new AuthorDataController();
+            controller.UpdateAuthor(id, AuthorInfo);
+
+            return RedirectToAction("Show/" + id);
         }
 
     }

@@ -23,6 +23,7 @@ nav{
 }
 .navlink {
     float: left;
+    margin-right:15px;
 }
 .dellink{
     color:#dd1111;
