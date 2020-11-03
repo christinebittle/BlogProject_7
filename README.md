@@ -1,5 +1,5 @@
 # BlogProject_6
-This iteration includes delete functionality!
+This iteration includes create, read, update, and delete functionality!
 
 [Video which goes over codebase](https://youtu.be/uP2kH8tFXIQ)
 
