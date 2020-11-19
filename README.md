@@ -1,7 +1,7 @@
 # BlogProject_6
 This iteration includes create, read, update, and delete functionality!
 
-[Video which goes over codebase](https://youtu.be/uP2kH8tFXIQ)
+[Video which goes over codebase](https://youtu.be/o1ax8rvlFMQ)
 
 ## How to Install:
 - Step 1 : Download [MAMP](https://www.mamp.info/en/downloads/) or similar MySQL environment
