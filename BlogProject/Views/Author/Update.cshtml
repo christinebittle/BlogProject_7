@@ -9,20 +9,20 @@
         <a class="navlink" href="/Author/Show/@Model.AuthorId">Back</a>
     </nav>
     <h2>Update Author</h2>
-    <form method="POST" action="/Author/Update/@Model.AuthorId">
+    <form method="POST" action="/Author/Update/@Model.AuthorId" onsubmit="return ValidateAuthor();">
         <div class="inputrow">
             <label for="AuthorFname">First Name:</label>
-            <input type="text" id="AuthorFname" name="AuthorFname" value="@Model.AuthorFname"/>
+            <input type="text" id="AuthorFname" name="AuthorFname" value="@Model.AuthorFname" />
 
         </div>
         <div class="inputrow">
             <label for="AuthorLname">Last Name:</label>
-            <input type="text" id="AuthorLname" name="AuthorLname" value="@Model.AuthorLname"/>
+            <input type="text" id="AuthorLname" name="AuthorLname" value="@Model.AuthorLname" />
 
         </div>
         <div class="inputrow">
             <label for="AuthorEmail">Email:</label>
-            <input type="text" id="AuthorEmail" name="AuthorEmail" value="@Model.AuthorEmail"/>
+            <input type="text" id="AuthorEmail" name="AuthorEmail" value="@Model.AuthorEmail" />
         </div>
         <div class="inputrow">
             <label for="AuthorBio">Biography:</label>
@@ -33,6 +33,7 @@
         <div class="inputrow">
             <input type="submit" value="Update Author" />
         </div>
+        <div id="ErrorBox" style="display:none;"></div>
     </form>
 </div>
 

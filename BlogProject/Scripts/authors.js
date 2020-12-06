@@ -1,7 +1,55 @@
 ﻿// AJAX for author Add can go in here!
 // This file is connected to the project via Shared/_Layout.cshtml
 
+
+
+// Usually Validation functions for Add and Update are separated.
+// You can run into situations where information added is no longer updated, or vice versa
+// However, as an example, validation is consolidated into 'ValidateAuthor'
+// This is so that both Ajax and Non Ajax techniques can utilize the same client-side validation logic.
+function ValidateAuthor() {
+
+	var IsValid = true;
+	var ErrorMsg = "";
+	var ErrorBox = document.getElementById("ErrorBox");
+	var AuthorFname = document.getElementById('AuthorFname').value;
+	var AuthorLname = document.getElementById('AuthorLname').value;
+	var AuthorEmail = document.getElementById('AuthorEmail').value;
+	var AuthorBio = document.getElementById('AuthorBio').value;
+
+	//First Name is two or more characters
+	if (AuthorFname.length < 2) {
+		IsValid = false;
+		ErrorMsg += "First Name Must be 2 or more characters.<br>";
+	}
+	//Last Name is two or more characters
+	if (AuthorLname.length < 2) {
+		IsValid = false;
+		ErrorMsg += "Last Name Must be 2 or more characters.<br>";
+	}
+	//Email is valid pattern
+	if (!ValidateEmail(AuthorEmail)) {
+		IsValid = false;
+		ErrorMsg += "Please Enter a valid Email.<br>";
+	}
+
+	if (!IsValid) {
+		ErrorBox.style.display = "block";
+		ErrorBox.innerHTML = ErrorMsg;
+	}else {
+		ErrorBox.style.display = "none";
+		ErrorBox.innerHTML = "";
+    }
+
+
+	return IsValid;
+}
+
 function AddAuthor() {
+
+	//check for validation straight away
+	var IsValid = ValidateAuthor();
+	if (!IsValid) return;
 
 	//goal: send a request which looks like this:
 	//POST : http://localhost:51326/api/AuthorData/AddAuthor
@@ -18,8 +66,6 @@ function AddAuthor() {
 	var AuthorLname = document.getElementById('AuthorLname').value;
 	var AuthorEmail = document.getElementById('AuthorEmail').value;
 	var AuthorBio = document.getElementById('AuthorBio').value;
-
-
 
 	var AuthorData = {
 		"AuthorFname": AuthorFname,
@@ -50,6 +96,10 @@ function AddAuthor() {
 
 
 function UpdateAuthor(AuthorId) {
+
+	//check for validation straight away
+	var IsValid = ValidateAuthor();
+	if (!IsValid) return;
 
 	//goal: send a request which looks like this:
 	//POST : http://localhost:51326/api/AuthorData/UpdateAuthor/{id}
@@ -93,4 +143,11 @@ function UpdateAuthor(AuthorId) {
 	//POST information sent through the .send() method
 	rq.send(JSON.stringify(AuthorData));
 
+}
+
+
+//Helper function from : https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+function ValidateEmail(email) {
+	const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	return re.test(String(email).toLowerCase());
 }

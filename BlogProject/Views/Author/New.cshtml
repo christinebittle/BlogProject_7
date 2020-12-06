@@ -9,7 +9,8 @@
         <a class="navlink" href="/Author/List">Back To Authors</a>
     </nav>
     <h2>New Author</h2>
-    <form method="POST" action="/Author/Create">
+    
+    <form method="POST" action="/Author/Create" onsubmit="return ValidateAuthor();">
         <div class="inputrow">
             <label for="AuthorFname">First Name:</label>
             <input type="text" id="AuthorFname" name="AuthorFname" />
@@ -33,5 +34,6 @@
         <div class="inputrow">
             <input type="submit" value="Create Author" />
         </div>
+        <div id="ErrorBox" style="display:none;"></div>
     </form>
 </div>

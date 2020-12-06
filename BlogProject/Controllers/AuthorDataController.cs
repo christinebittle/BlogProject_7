@@ -176,12 +176,13 @@ namespace BlogProject.Controllers
         /// </example>
         [HttpPost]
         [EnableCors(origins: "*", methods: "*", headers: "*")]
-        public void AddAuthor([FromBody]Author NewAuthor)
+        public void AddAuthor([FromBody] Author NewAuthor)
         {
             //Create an instance of a connection
             MySqlConnection Conn = Blog.AccessDatabase();
 
-            Debug.WriteLine(NewAuthor.AuthorFname);
+            //Exit method if model fields are not included.
+            if (!NewAuthor.IsValid()) return;
 
             //Open the connection between the web server and database
             Conn.Open();
@@ -226,7 +227,8 @@ namespace BlogProject.Controllers
             //Create an instance of a connection
             MySqlConnection Conn = Blog.AccessDatabase();
 
-            //Debug.WriteLine(AuthorInfo.AuthorFname);
+            //Exit method if model fields are not included.
+            if (!AuthorInfo.IsValid()) return;
 
             //Open the connection between the web server and database
             Conn.Open();
