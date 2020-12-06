@@ -7,6 +7,7 @@ using System.Web.Http;
 using BlogProject.Models;
 using MySql.Data.MySqlClient;
 using System.Diagnostics;
+using System.Web.Http.Cors;
 
 namespace BlogProject.Controllers
 {
@@ -25,6 +26,7 @@ namespace BlogProject.Controllers
         /// <example>GET api/AuthorData/ListAuthors -> {Author Object, Author Object, Author Object...}</example>
         [HttpGet]
         [Route("api/AuthorData/ListAuthors/{SearchKey?}")]
+        [EnableCors(origins: "*", methods: "*", headers: "*")]
         public IEnumerable<Author> ListAuthors(string SearchKey=null)
         {
             //Create an instance of a connection
@@ -83,6 +85,7 @@ namespace BlogProject.Controllers
         /// <example>api/AuthorData/FindAuthor/6 -> {Author Object}</example>
         /// <example>api/AuthorData/FindAuthor/10 -> {Author Object}</example>
         [HttpGet]
+        [EnableCors(origins: "*", methods: "*", headers: "*")]
         public Author FindAuthor(int id)
         {
             Author NewAuthor = new Author();
@@ -133,6 +136,7 @@ namespace BlogProject.Controllers
         /// <param name="id">The ID of the author.</param>
         /// <example>POST /api/AuthorData/DeleteAuthor/3</example>
         [HttpPost]
+        [EnableCors(origins: "*", methods: "*", headers: "*")]
         public void DeleteAuthor(int id)
         {
             //Create an instance of a connection
@@ -171,6 +175,7 @@ namespace BlogProject.Controllers
         /// }
         /// </example>
         [HttpPost]
+        [EnableCors(origins: "*", methods: "*", headers: "*")]
         public void AddAuthor([FromBody]Author NewAuthor)
         {
             //Create an instance of a connection
@@ -214,12 +219,14 @@ namespace BlogProject.Controllers
         ///	"AuthorEmail":"christine@test.ca"
         /// }
         /// </example>
+        [HttpPost]
+        [EnableCors(origins: "*", methods: "*", headers: "*")]
         public void UpdateAuthor(int id, [FromBody]Author AuthorInfo)
         {
             //Create an instance of a connection
             MySqlConnection Conn = Blog.AccessDatabase();
 
-            Debug.WriteLine(AuthorInfo.AuthorFname);
+            //Debug.WriteLine(AuthorInfo.AuthorFname);
 
             //Open the connection between the web server and database
             Conn.Open();

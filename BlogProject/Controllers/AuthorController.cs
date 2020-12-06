@@ -60,6 +60,12 @@ namespace BlogProject.Controllers
             return View();
         }
 
+        //GET : /Author/Ajax_New
+        public ActionResult Ajax_New()
+        {
+            return View();
+        }
+
         //POST : /Author/Create
         [HttpPost]
         public ActionResult Create(string AuthorFname, string AuthorLname, string AuthorBio, string AuthorEmail)
@@ -92,6 +98,14 @@ namespace BlogProject.Controllers
         /// <returns>A dynamic "Update Author" webpage which provides the current information of the author and asks the user for new information as part of a form.</returns>
         /// <example>GET : /Author/Update/5</example>
         public ActionResult Update(int id)
+        {
+            AuthorDataController controller = new AuthorDataController();
+            Author SelectedAuthor = controller.FindAuthor(id);
+
+            return View(SelectedAuthor);
+        }
+
+        public ActionResult Ajax_Update(int id)
         {
             AuthorDataController controller = new AuthorDataController();
             Author SelectedAuthor = controller.FindAuthor(id);

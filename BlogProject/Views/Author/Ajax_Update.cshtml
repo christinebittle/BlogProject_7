@@ -1,0 +1,52 @@
+﻿@model BlogProject.Models.Author
+
+@{
+    ViewBag.Title = "AJAX UPDATE";
+}
+@{
+    
+    /*
+    This file uses a combination of server rendering and ajax logic.
+    - Server Rendering to pull current information about the author and display in fields
+    - Request to update author with new values is fulfilled by ajax
+    */
+}
+
+<div id="containershow">
+    <nav>
+        <a class="navlink" href="/Author/List">Back To Authors</a>
+    </nav>
+    <h2>Update @Model.AuthorFname @Model.AuthorLname</h2>
+    @{
+        /* AJAX Request to update author */
+        /* No form submission needed */
+        /* button onclick will handle form submission */
+        /* Each item has an ID for validation && ajax submission */
+
+
+    }
+    <div class="inputrow">
+        <label for="AuthorFname">First Name:</label>
+        <input type="text" id="AuthorFname" name="AuthorFname" value="@Model.AuthorFname"/>
+
+    </div>
+    <div class="inputrow">
+        <label for="AuthorLname">Last Name:</label>
+        <input type="text" id="AuthorLname" name="AuthorLname" value="@Model.AuthorLname"/>
+
+    </div>
+    <div class="inputrow">
+        <label for="AuthorEmail">Email:</label>
+        <input type="text" id="AuthorEmail" name="AuthorEmail" value="@Model.AuthorEmail"/>
+    </div>
+    <div class="inputrow">
+        <label for="AuthorBio">Biography:</label>
+        <div>
+            <textarea id="AuthorBio" name="AuthorBio">@Model.AuthorBio</textarea>
+        </div>
+    </div>
+    @{
+        //AddAuthor() is a JS method defined in /Scripts/authors.js
+    }
+    <button onclick="UpdateAuthor(@Model.AuthorId);">Update Author</button>
+</div>
