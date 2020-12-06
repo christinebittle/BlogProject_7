@@ -1,5 +1,5 @@
-# BlogProject_6
-This iteration includes create, read, update, and delete functionality!
+# BlogProject_7
+This iteration contains Client & Server Validation Examples!
 
 [Video which goes over codebase](https://youtu.be/o1ax8rvlFMQ)
 
