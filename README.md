@@ -1,5 +1,5 @@
 # BlogProject_7
-This iteration contains Client & Server Validation Examples!
+This iteration contains Client & Server Validation Examples, List AJAX Functionality, and MVP for articles, comments, and tags!
 
 [Video which goes over codebase](https://youtu.be/o1ax8rvlFMQ)
 
