@@ -1,0 +1,29 @@
+﻿@model BlogProject.Models.Comment
+@{
+    ViewBag.Title = "Update";
+}
+
+
+<div id="containershow">
+    <nav>
+        <a class="navlink" href="/Comment/Show/@Model.CommentId">Back</a>
+    </nav>
+    <h2>Update Comment</h2>
+    <form method="POST" action="/Comment/Update/@Model.CommentId" onsubmit="return ValidateComment();">
+        <div class="inputrow">
+            <label for="CommentDesc">Comment Description:</label>
+            <textarea id="CommentDesc" name="CommentDesc">@Model.CommentDesc</textarea>
+
+        </div>
+        <div class="inputrow">
+            <label for="CommentRating">Comment Rating:</label>
+            <input type="text" name="CommentRating" id="CommentRating" value="@Model.CommentRating">
+
+        </div>
+        <div class="inputrow">
+            <input type="submit" value="Update Comment" />
+        </div>
+    </form>
+</div>
+
+

@@ -1,0 +1,29 @@
+﻿@model BlogProject.Models.Tag
+@{
+    ViewBag.Title = "Update";
+}
+
+
+<div id="containershow">
+    <nav>
+        <a class="navlink" href="/Tag/Show/@Model.TagId">Back</a>
+    </nav>
+    <h2>Update Tag</h2>
+    <form method="POST" action="/Tag/Update/@Model.TagId" onsubmit="return ValidateTag();">
+        <div class="inputrow">
+            <label for="TagName">Tag Name:</label>
+            <input type="text" id="TagName" name="TagName" value="@Model.TagName">
+
+        </div>
+        <div class="inputrow">
+            <label for="TagColor">Tag Color:</label>
+            <input type="text" name="TagColor" id="TagColor" value="@Model.TagColor">
+
+        </div>
+        <div class="inputrow">
+            <input type="submit" value="Update Tag" />
+        </div>
+    </form>
+</div>
+
+

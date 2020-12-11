@@ -1,0 +1,21 @@
+﻿@model IEnumerable<BlogProject.Models.Comment>
+@{
+    ViewBag.Title = "List";
+}
+
+<div id="containerlist">
+    <nav>
+        <a class="navlink" href="/Comment/New">New Comment</a>
+    </nav>
+    <h2>List of Comments</h2>
+    <form action="/Comment/List" method="GET">
+        <input type="text" name="SearchKey" autocomplete="off" />
+        <input type="submit" value="Search" />
+    </form>
+    @foreach (var Comment in Model)
+    {
+        <div class="listitem row">
+            <div class="col-md-12"><a href="/Comment/Show/@Comment.CommentId">@Comment.CommentDesc</a></div>
+        </div>
+    }
+</div>

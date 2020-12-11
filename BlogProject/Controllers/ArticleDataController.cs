@@ -99,6 +99,81 @@ namespace BlogProject.Controllers
 
 
         /// <summary>
+        /// Returns a list of articles which are written by an inputted author
+        /// </summary>
+        /// <param name="AuthorId">the author id primary key</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/ArticleData/ListArticles/{AuthorId}")]
+        [EnableCors(origins: "*", methods: "*", headers: "*")]
+        public IEnumerable<Article> GetArticlesForAuthor(int AuthorId)
+        {
+            //Create an empty list of Articles
+            List<Article> Articles = new List<Article> { };
+            try
+            {
+                //Try to open the connection between the web server and database
+                Conn.Open();
+
+                //Establish a new command (query) for our database
+                MySqlCommand cmd = Conn.CreateCommand();
+
+                //SQL QUERY
+                cmd.CommandText = "SELECT * from Articles where articles.authorid=@AuthorId";
+
+                cmd.Parameters.AddWithValue("@AuthorId", AuthorId);
+                cmd.Prepare();
+
+                //Gather Result Set of Query into a variable
+
+                MySqlDataReader ResultSet = cmd.ExecuteReader();
+
+                //Loop Through Each Row the Result Set               
+                while (ResultSet.Read())
+                {
+                    //Access Column information by the DB column name as an index
+                    int ArticleId = Convert.ToInt32(ResultSet["articleid"]);
+                    string ArticleTitle = ResultSet["articletitle"].ToString();
+                    string ArticleBody = ResultSet["articlebody"].ToString();
+                    DateTime ArticleDate = (DateTime)ResultSet["articledate"];
+
+
+                    Article NewArticle = new Article();
+                    NewArticle.ArticleId = ArticleId;
+                    NewArticle.ArticleTitle = ArticleTitle;
+                    NewArticle.ArticleBody = ArticleBody;
+                    NewArticle.ArticleDate = ArticleDate;
+
+                    //Add the Article Name to the List
+                    Articles.Add(NewArticle);
+                }
+            }
+            catch (MySqlException ex)
+            {
+                //Catches issues with MySQL.
+                Debug.WriteLine(ex);
+                throw new ApplicationException("Issue was a database issue.", ex);
+            }
+            catch (Exception ex)
+            {
+                //Catches generic issues
+                Debug.Write(ex);
+                throw new ApplicationException("There was a server issue.", ex);
+            }
+            finally
+            {
+                //Close the connection between the MySQL Database and the WebServer
+                Conn.Close();
+
+            }
+
+            //Return the final list of Article names
+            return Articles;
+
+
+        }
+
+        /// <summary>
         /// Finds an Article from the MySQL Database through an id. Non-Deterministic.
         /// </summary>
         /// <param name="id">The Article ID</param>

@@ -1,0 +1,21 @@
+﻿@model IEnumerable<BlogProject.Models.Tag>
+@{
+    ViewBag.Title = "List";
+}
+
+<div id="containerlist">
+    <nav>
+        <a class="navlink" href="/Tag/New">New Tag</a>
+    </nav>
+    <h2>List of Tags</h2>
+    <form action="/Tag/List" method="GET">
+        <input type="text" name="SearchKey" autocomplete="off" />
+        <input type="submit" value="Search" />
+    </form>
+    @foreach (var Tag in Model)
+    {
+        <div class="listitem row">
+            <div class="col-md-12"><a href="/Tag/Show/@Tag.TagId">@Tag.TagName</a></div>
+        </div>
+    }
+</div>

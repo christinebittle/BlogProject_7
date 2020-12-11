@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using BlogProject.Models;
+using BlogProject.Models.ViewModels;
 using System.Diagnostics;
 
 namespace BlogProject.Controllers
@@ -11,7 +12,13 @@ namespace BlogProject.Controllers
     public class AuthorController : Controller
     {
         //We can instantiate the authorcontroller outside of each method
-        private AuthorDataController controller = new AuthorDataController();
+        private AuthorDataController authordatacontroller = new AuthorDataController();
+
+        //Might need to grab related article data for this author
+        private ArticleDataController articledatacontroller = new ArticleDataController();
+
+        //might need to grab related comment data for this author
+        private CommentDataController commentdatacontroller = new CommentDataController();
 
         // GET: Author
         public ActionResult Index()
@@ -33,7 +40,7 @@ namespace BlogProject.Controllers
         {
             try{
                 //Try to get a list of authors.
-                IEnumerable<Author> Authors = controller.ListAuthors(SearchKey);
+                IEnumerable<Author> Authors = authordatacontroller.ListAuthors(SearchKey);
                 return View(Authors);
             }
             catch (Exception ex)
@@ -56,8 +63,16 @@ namespace BlogProject.Controllers
         {
             try
             {
-                Author SelectedAuthor = controller.FindAuthor(id);
-                return View(SelectedAuthor);
+                ShowAuthor ViewModel = new ShowAuthor();
+
+                Author SelectedAuthor = authordatacontroller.FindAuthor(id);
+                IEnumerable<Article> ArticlesWritten = articledatacontroller.GetArticlesForAuthor(id);
+                IEnumerable<Comment> CommentsWritten = commentdatacontroller.GetCommentsForAuthor(id);
+                ViewModel.Author = SelectedAuthor;
+                ViewModel.ArticlesWritten = ArticlesWritten;
+                ViewModel.CommentsWritten = CommentsWritten;
+
+                return View(ViewModel);
             }
             catch (Exception ex)
             {
@@ -71,7 +86,7 @@ namespace BlogProject.Controllers
         {
             try
             {
-                Author NewAuthor = controller.FindAuthor(id);
+                Author NewAuthor = authordatacontroller.FindAuthor(id);
                 return View(NewAuthor);
             }
             catch (Exception ex)
@@ -89,7 +104,7 @@ namespace BlogProject.Controllers
         {
             try
             {
-                controller.DeleteAuthor(id);
+                authordatacontroller.DeleteAuthor(id);
                 return RedirectToAction("List");
             }
             catch (Exception ex)
@@ -123,7 +138,7 @@ namespace BlogProject.Controllers
                 NewAuthor.AuthorLname = AuthorLname;
                 NewAuthor.AuthorBio = AuthorBio;
                 NewAuthor.AuthorEmail = AuthorEmail;
-                controller.AddAuthor(NewAuthor);
+                authordatacontroller.AddAuthor(NewAuthor);
             }
             catch (Exception ex)
             {
@@ -146,7 +161,7 @@ namespace BlogProject.Controllers
         {
             try
             {
-                Author SelectedAuthor = controller.FindAuthor(id);
+                Author SelectedAuthor = authordatacontroller.FindAuthor(id);
                 return View(SelectedAuthor);
             }
             catch (Exception ex)
@@ -166,7 +181,7 @@ namespace BlogProject.Controllers
         {
             try
             {
-                Author SelectedAuthor = controller.FindAuthor(id);
+                Author SelectedAuthor = authordatacontroller.FindAuthor(id);
                 return View(SelectedAuthor);
             }
             catch (Exception ex)
@@ -206,7 +221,7 @@ namespace BlogProject.Controllers
                 AuthorInfo.AuthorLname = AuthorLname;
                 AuthorInfo.AuthorBio = AuthorBio;
                 AuthorInfo.AuthorEmail = AuthorEmail;
-                controller.UpdateAuthor(id, AuthorInfo);
+                authordatacontroller.UpdateAuthor(id, AuthorInfo);
             }
             catch (Exception ex)
             {

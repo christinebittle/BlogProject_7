@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "New";
+}
+
+
+<div id="containershow">
+    <nav>
+        <a class="navlink" href="/Article/List">Back To Articles</a>
+    </nav>
+    <h2>New Article</h2>
+    
+    <form method="POST" action="/Article/Create" onsubmit="return ValidateArticle();">
+        <div class="inputrow">
+            <label for="ArticleTitle">Article Title:</label>
+            <input type="text" id="ArticleTitle" name="ArticleTitle" />
+
+        </div>
+        <div class="inputrow">
+            <label for="ArticleBody">ArticleBody:</label>
+            <textarea name="ArticleBody" id="ArticleBody"></textarea>
+
+        </div>
+        <div class="inputrow">
+            <input type="submit" value="Create Article" />
+        </div>
+        <div id="ErrorBox" style="display:none;"></div>
+    </form>
+</div>

@@ -1,0 +1,14 @@
+﻿@model BlogProject.Models.Tag
+@{
+    ViewBag.Title = "Show";
+}
+
+
+<div id="containershow">
+    <nav>
+        <a class="navlink" href="/Tag/List">Back To Tags</a>
+        <a class="dellink" href="/Tag/DeleteConfirm/@Model.TagId">Delete</a>
+        <a class="navlink" href="/Tag/Update/@Model.TagId">Update</a>
+    </nav>
+    <p>@Model.TagName</p>
+</div>

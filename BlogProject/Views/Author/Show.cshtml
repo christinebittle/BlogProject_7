@@ -1,4 +1,4 @@
-﻿@model BlogProject.Models.Author
+﻿@model BlogProject.Models.ViewModels.ShowAuthor
 @{
     ViewBag.Title = "Show";
 }
@@ -7,10 +7,32 @@
 <div id="containershow">
     <nav>
         <a class="navlink" href="/Author/List">Back To Authors</a>
-        <a class="dellink" href="/Author/DeleteConfirm/@Model.AuthorId">Delete</a>
-        <a class="navlink" href="/Author/Update/@Model.AuthorId">Update</a>
+        <a class="dellink" href="/Author/DeleteConfirm/@Model.Author.AuthorId">Delete</a>
+        <a class="navlink" href="/Author/Update/@Model.Author.AuthorId">Update</a>
     </nav>
-    <h2>@Model.AuthorFname @Model.AuthorLname</h2>
-    <p style="font-style:italic;">Member Since @Model.AuthorJoinDate.ToString("dd-MMM-yyyy")</p>
-    <p>@Model.AuthorBio</p>
+    <h2>@Model.Author.AuthorFname @Model.Author.AuthorLname</h2>
+    <p style="font-style:italic;">Member Since @Model.Author.AuthorJoinDate.ToString("dd-MMM-yyyy")</p>
+    <p>@Model.Author.AuthorBio</p>
+    <aside style="overflow:hidden;">
+        <div class="col2">
+            <h3>Recent Articles Written:</h3>
+            <ul>
+                @foreach (var article in @Model.ArticlesWritten)
+                {
+                    <li><a href="/Article/Show/@article.ArticleId">@article.ArticleTitle</a></li>
+                }
+            </ul>
+        </div>
+        <div class="col2last">
+            <h3>Recent Comments Written:</h3>
+            <ul>
+                @foreach(var comment in Model.CommentsWritten)
+                {
+                    <li><a href="/Comment/Show/@comment.CommentId">@comment.CommentDesc</a></li>
+                }
+
+            </ul>
+        </div>
+        <div class="clear:both"></div>
+    </aside>
 </div>

@@ -226,6 +226,7 @@
     <Compile Include="Models\BlogDbContext.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\ViewModels\ShowAuthor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -289,12 +290,27 @@
     <Content Include="Views\Home\Error.cshtml" />
     <Content Include="Views\Author\Error.cshtml" />
     <Content Include="Views\Author\Ajax_List.cshtml" />
+    <Content Include="Views\Article\DeleteConfirm.cshtml" />
+    <Content Include="Views\Article\Error.cshtml" />
+    <Content Include="Views\Article\List.cshtml" />
+    <Content Include="Views\Article\New.cshtml" />
+    <Content Include="Views\Article\Show.cshtml" />
+    <Content Include="Views\Article\Update.cshtml" />
+    <Content Include="Views\Comment\Update.cshtml" />
+    <Content Include="Views\Comment\DeleteConfirm.cshtml" />
+    <Content Include="Views\Comment\Error.cshtml" />
+    <Content Include="Views\Comment\List.cshtml" />
+    <Content Include="Views\Comment\New.cshtml" />
+    <Content Include="Views\Comment\Show.cshtml" />
+    <Content Include="Views\Tag\DeleteConfirm.cshtml" />
+    <Content Include="Views\Tag\Error.cshtml" />
+    <Content Include="Views\Tag\List.cshtml" />
+    <Content Include="Views\Tag\New.cshtml" />
+    <Content Include="Views\Tag\Show.cshtml" />
+    <Content Include="Views\Tag\Update.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Article\" />
-    <Folder Include="Views\Comment\" />
-    <Folder Include="Views\Tag\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

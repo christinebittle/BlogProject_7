@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "New";
+}
+
+
+<div id="containershow">
+    <nav>
+        <a class="navlink" href="/Comment/List">Back To Comments</a>
+    </nav>
+    <h2>New Comment</h2>
+    
+    <form method="POST" action="/Comment/Create" onsubmit="return ValidateComment();">
+        <div class="inputrow">
+            <label for="CommentDesc">Comment Description:</label>
+            <textarea id="CommentDesc" name="CommentDesc"></textarea>
+
+        </div>
+        <div class="inputrow">
+            <label for="CommentRating">Comment Rating:</label>
+            <input type="text" name="CommentRating" id="CommentRating">
+
+        </div>
+        <div class="inputrow">
+            <input type="submit" value="Create Comment" />
+        </div>
+        <div id="ErrorBox" style="display:none;"></div>
+    </form>
+</div>

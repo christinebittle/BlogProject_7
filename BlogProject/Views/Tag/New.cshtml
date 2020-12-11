@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "New";
+}
+
+
+<div id="containershow">
+    <nav>
+        <a class="navlink" href="/Tag/List">Back To Tags</a>
+    </nav>
+    <h2>New Tag</h2>
+    
+    <form method="POST" action="/Tag/Create" onsubmit="return ValidateTag();">
+        <div class="inputrow">
+            <label for="TagName">Tag Name:</label>
+            <input type="text" id="TagName" name="TagName">
+
+        </div>
+        <div class="inputrow">
+            <label for="TagColor">Tag Color:</label>
+            <input type="text" name="TagColor" id="TagColor">
+
+        </div>
+        <div class="inputrow">
+            <input type="submit" value="Create Tag" />
+        </div>
+        <div id="ErrorBox" style="display:none;"></div>
+    </form>
+</div>

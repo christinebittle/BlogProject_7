@@ -66,3 +66,18 @@ nav{
     float:none;
     margin-top:50px;
 }
+
+/*
+Each column should be 45.87% wide with a gutter space of 8.25%
+*/
+.col2 {
+    width: 45.87%;
+    float: left;
+    margin-right: 8.25%;
+}
+
+.col2last {
+    width: 45.87%;
+    float: left;
+    margin-right: 0;
+}

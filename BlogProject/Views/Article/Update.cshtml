@@ -1,0 +1,30 @@
+﻿@model BlogProject.Models.Article
+@{
+    ViewBag.Title = "Update";
+}
+
+
+<div id="containershow">
+    <nav>
+        <a class="navlink" href="/Article/Show/@Model.ArticleId">Back</a>
+    </nav>
+    <h2>Update Author</h2>
+    <form method="POST" action="/Article/Update/@Model.ArticleId" onsubmit="return ValidateArticle();">
+        <div class="inputrow">
+            <label for="ArticleTitle">Article Title:</label>
+            <input type="text" id="ArticleTitle" name="ArticleTitle" value="@Model.ArticleTitle"/>
+
+        </div>
+        <div class="inputrow">
+            <label for="ArticleBody">ArticleBody:</label>
+            <textarea name="ArticleBody" id="ArticleBody">@Model.ArticleBody</textarea>
+
+        </div>
+        <div class="inputrow">
+            <input type="submit" value="Update Article" />
+        </div>
+        <div id="ErrorBox" style="display:none;"></div>
+    </form>
+</div>
+
+

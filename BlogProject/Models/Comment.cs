@@ -10,6 +10,7 @@ namespace BlogProject.Models
         public int CommentId;
         public string CommentDesc;
         public int CommentRating;
+        public DateTime CommentDate;
         //foreign key
         public int ArticleId;
         //foreign key

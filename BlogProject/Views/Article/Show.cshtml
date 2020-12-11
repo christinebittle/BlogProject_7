@@ -1,0 +1,16 @@
+﻿@model BlogProject.Models.Article
+@{
+    ViewBag.Title = "Show";
+}
+
+
+<div id="containershow">
+    <nav>
+        <a class="navlink" href="/Article/List">Back To Articles</a>
+        <a class="dellink" href="/Article/DeleteConfirm/@Model.ArticleId">Delete</a>
+        <a class="navlink" href="/Article/Update/@Model.ArticleId">Update</a>
+    </nav>
+    <h2>@Model.ArticleTitle</h2>
+    <p style="font-style:italic;">Posted On @Model.ArticleDate.ToString("dd-MMM-yyyy")</p>
+    <p>@Model.ArticleBody</p>
+</div>

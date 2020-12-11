@@ -8,6 +8,7 @@ namespace BlogProject.Models
     public class Tag
     {
         public int TagId;
+        public string TagName;
         public string TagColor;
 
         //can store validation logic here

@@ -1,0 +1,15 @@
+﻿@model BlogProject.Models.Comment
+@{
+    ViewBag.Title = "Show";
+}
+
+
+<div id="containershow">
+    <nav>
+        <a class="navlink" href="/Comment/List">Back To Comments</a>
+        <a class="dellink" href="/Comment/DeleteConfirm/@Model.CommentId">Delete</a>
+        <a class="navlink" href="/Comment/Update/@Model.CommentId">Update</a>
+    </nav>
+    <p style="font-style:italic;">Posted On @Model.CommentDate.ToString("dd-MMM-yyyy")</p>
+    <span style="font-style:italic;">Rating: @Model.CommentRating</span><p>@Model.CommentDesc</p>
+</div>
