@@ -6,79 +6,79 @@ using System.Net.Http;
 using System.Web.Http;
 using BlogProject.Models;
 using MySql.Data.MySqlClient;
-using System.Diagnostics;
 using System.Web.Http.Cors;
+using System.Diagnostics;
 
 namespace BlogProject.Controllers
 {
-    public class AuthorDataController : ApiController
+    public class ArticleDataController : ApiController
     {
+
         //The database context class which allows us to access our MySQL Database.
         //AccessDatabase switched to a static method, one that can be called without an object.
         MySqlConnection Conn = BlogDbContext.AccessDatabase();
 
 
-        //This Controller Will access the authors table of our blog database. Non-Deterministic.
+        //This Controller Will access the Articles table of our blog database. Non-Deterministic.
         /// <summary>
-        /// Returns a list of Authors in the system
+        /// Returns a list of Articles in the system
         /// </summary>
         /// <returns>
-        /// A list of Author Objects with fields mapped to the database column values (first name, last name, bio).
+        /// A list of Article Objects with fields mapped to the database column values (first name, last name, bio).
         /// </returns>
-        /// <example>GET api/AuthorData/ListAuthors -> {Author Object, Author Object, Author Object...}</example>
+        /// <example>GET api/ArticleData/ListArticles -> {Article Object, Article Object, Article Object...}</example>
         [HttpGet]
-        [Route("api/AuthorData/ListAuthors/{SearchKey?}")]
+        [Route("api/ArticleData/ListArticles/{SearchKey?}")]
         [EnableCors(origins: "*", methods: "*", headers: "*")]
-        public IEnumerable<Author> ListAuthors(string SearchKey=null)
+        public IEnumerable<Article> ListArticles(string SearchKey = null)
         {
-            //Create an empty list of Authors
-            List<Author> Authors = new List<Author> { };
+            //Create an empty list of Articles
+            List<Article> Articles = new List<Article> { };
             try
-            { 
+            {
                 //Try to open the connection between the web server and database
                 Conn.Open();
-            
+
                 //Establish a new command (query) for our database
                 MySqlCommand cmd = Conn.CreateCommand();
 
                 //SQL QUERY
-                cmd.CommandText = "SELECT * from Authors where lower(authorfname) like lower(@key) or lower(authorlname) like lower(@key) or lower(concat(authorfname, ' ', authorlname)) like lower(@key)";
+                cmd.CommandText = "SELECT * from Articles where lower(articletitle) like lower(@key) or lower(articlebody) like lower(@key)";
 
                 cmd.Parameters.AddWithValue("@key", "%" + SearchKey + "%");
                 cmd.Prepare();
 
                 //Gather Result Set of Query into a variable
-            
+
                 MySqlDataReader ResultSet = cmd.ExecuteReader();
- 
+
                 //Loop Through Each Row the Result Set               
                 while (ResultSet.Read())
                 {
                     //Access Column information by the DB column name as an index
-                    int AuthorId = Convert.ToInt32(ResultSet["authorid"]);
-                    string AuthorFname = ResultSet["authorfname"].ToString();
-                    string AuthorLname = ResultSet["authorlname"].ToString();
-                    DateTime AuthorJoinDate = (DateTime)ResultSet["authorjoindate"];
-                    string AuthorBio = ResultSet["authorbio"].ToString();
+                    int ArticleId = Convert.ToInt32(ResultSet["articleid"]);
+                    string ArticleTitle = ResultSet["articletitle"].ToString();
+                    string ArticleBody = ResultSet["articlebody"].ToString();
+                    DateTime ArticleDate = (DateTime)ResultSet["articledate"];
 
-                    Author NewAuthor = new Author();
-                    NewAuthor.AuthorId = AuthorId;
-                    NewAuthor.AuthorFname = AuthorFname;
-                    NewAuthor.AuthorLname = AuthorLname;
-                    NewAuthor.AuthorJoinDate = AuthorJoinDate;
-                    NewAuthor.AuthorBio = AuthorBio;
 
-                    //Add the Author Name to the List
-                    Authors.Add(NewAuthor);
+                    Article NewArticle = new Article();
+                    NewArticle.ArticleId = ArticleId;
+                    NewArticle.ArticleTitle = ArticleTitle;
+                    NewArticle.ArticleBody = ArticleBody;
+                    NewArticle.ArticleDate = ArticleDate;
+
+                    //Add the Article Name to the List
+                    Articles.Add(NewArticle);
                 }
             }
-            catch(MySqlException ex)
+            catch (MySqlException ex)
             {
                 //Catches issues with MySQL.
                 Debug.WriteLine(ex);
                 throw new ApplicationException("Issue was a database issue.", ex);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 //Catches generic issues
                 Debug.Write(ex);
@@ -88,28 +88,28 @@ namespace BlogProject.Controllers
             {
                 //Close the connection between the MySQL Database and the WebServer
                 Conn.Close();
-               
+
             }
 
-            //Return the final list of author names
-            return Authors;
+            //Return the final list of Article names
+            return Articles;
 
 
         }
 
 
         /// <summary>
-        /// Finds an author from the MySQL Database through an id. Non-Deterministic.
+        /// Finds an Article from the MySQL Database through an id. Non-Deterministic.
         /// </summary>
-        /// <param name="id">The Author ID</param>
-        /// <returns>Author object containing information about the author with a matching ID. Empty Author Object if the ID does not match any authors in the system.</returns>
-        /// <example>api/AuthorData/FindAuthor/6 -> {Author Object}</example>
-        /// <example>api/AuthorData/FindAuthor/10 -> {Author Object}</example>
+        /// <param name="id">The Article ID</param>
+        /// <returns>Article object containing information about the Article with a matching ID. Empty Article Object if the ID does not match any Articles in the system.</returns>
+        /// <example>api/ArticleData/FindArticle/6 -> {Article Object}</example>
+        /// <example>api/ArticleData/FindArticle/10 -> {Article Object}</example>
         [HttpGet]
         [EnableCors(origins: "*", methods: "*", headers: "*")]
-        public Author FindAuthor(int id)
+        public Article FindArticle(int id)
         {
-            Author NewAuthor = new Author();
+            Article NewArticle = new Article();
 
             try
             {
@@ -120,7 +120,7 @@ namespace BlogProject.Controllers
                 MySqlCommand cmd = Conn.CreateCommand();
 
                 //SQL QUERY
-                cmd.CommandText = "Select * from Authors where authorid = @id";
+                cmd.CommandText = "Select * from Articles where Articleid = @id";
                 cmd.Parameters.AddWithValue("@id", id);
                 cmd.Prepare();
 
@@ -130,30 +130,30 @@ namespace BlogProject.Controllers
                 while (ResultSet.Read())
                 {
                     //Access Column information by the DB column name as an index
-                    int AuthorId = (int)ResultSet["authorid"];
-                    string AuthorFname = ResultSet["authorfname"].ToString();
-                    string AuthorLname = ResultSet["authorlname"].ToString();
-                    string AuthorBio = ResultSet["authorbio"].ToString();
-                    string AuthorEmail = ResultSet["authoremail"].ToString();
-                    DateTime AuthorJoinDate = (DateTime)ResultSet["authorjoindate"];
+                    int ArticleId = Convert.ToInt32(ResultSet["articleid"]);
+                    string ArticleTitle = ResultSet["articletitle"].ToString();
+                    string ArticleBody = ResultSet["articlebody"].ToString();
+                    DateTime ArticleDate = (DateTime)ResultSet["articledate"];
 
-                    NewAuthor.AuthorId = AuthorId;
-                    NewAuthor.AuthorFname = AuthorFname;
-                    NewAuthor.AuthorLname = AuthorLname;
-                    NewAuthor.AuthorBio = AuthorBio;
-                    NewAuthor.AuthorEmail = AuthorEmail;
-                    NewAuthor.AuthorJoinDate = AuthorJoinDate;
 
-                    
+
+                    NewArticle.ArticleId = ArticleId;
+                    NewArticle.ArticleTitle = ArticleTitle;
+                    NewArticle.ArticleBody = ArticleBody;
+                    NewArticle.ArticleDate = ArticleDate;
+
+
+
+
                 }
                 //checking for model validity after pulling from the db
-                if (!NewAuthor.IsValid()) throw new HttpResponseException(HttpStatusCode.NotFound);
+                if (!NewArticle.IsValid()) throw new HttpResponseException(HttpStatusCode.NotFound);
 
             }
-            catch(HttpResponseException ex)
+            catch (HttpResponseException ex)
             {
                 Debug.WriteLine(ex);
-                throw new ApplicationException("That author was not found.", ex);
+                throw new ApplicationException("That Article was not found.", ex);
             }
             catch (MySqlException ex)
             {
@@ -175,18 +175,18 @@ namespace BlogProject.Controllers
             }
 
 
-            return NewAuthor;
+            return NewArticle;
         }
 
 
         /// <summary>
-        /// Deletes an Author from the connected MySQL Database if the ID of that author exists. Does NOT maintain relational integrity. Non-Deterministic.
+        /// Deletes an Article from the connected MySQL Database if the ID of that Article exists. Does NOT maintain relational integrity. Non-Deterministic.
         /// </summary>
-        /// <param name="id">The ID of the author.</param>
-        /// <example>POST /api/AuthorData/DeleteAuthor/3</example>
+        /// <param name="id">The ID of the Article.</param>
+        /// <example>POST /api/ArticleData/DeleteArticle/3</example>
         [HttpPost]
         [EnableCors(origins: "*", methods: "*", headers: "*")]
-        public void DeleteAuthor(int id)
+        public void DeleteArticle(int id)
         {
             try
             {
@@ -197,7 +197,7 @@ namespace BlogProject.Controllers
                 MySqlCommand cmd = Conn.CreateCommand();
 
                 //SQL QUERY
-                cmd.CommandText = "Delete from authors where authorid=@id";
+                cmd.CommandText = "Delete from Articles where articleid=@id";
                 cmd.Parameters.AddWithValue("@id", id);
                 cmd.Prepare();
 
@@ -224,25 +224,23 @@ namespace BlogProject.Controllers
         }
 
         /// <summary>
-        /// Adds an Author to the MySQL Database. Non-Deterministic.
+        /// Adds an Article to the MySQL Database. Non-Deterministic.
         /// </summary>
-        /// <param name="NewAuthor">An object with fields that map to the columns of the author's table. </param>
+        /// <param name="NewArticle">An object with fields that map to the columns of the Article's table. </param>
         /// <example>
-        /// POST api/AuthorData/AddAuthor 
+        /// POST api/ArticleData/AddArticle 
         /// FORM DATA / POST DATA / REQUEST BODY 
         /// {
-        ///	"AuthorFname":"Christine",
-        ///	"AuthorLname":"Bittle",
-        ///	"AuthorBio":"Likes Coding!",
-        ///	"AuthorEmail":"christine@test.ca"
+        ///	"ArticleTitle":"My Sound Adventure in Italy",
+        ///	"ArticleBody":"I really enjoyed Italy. The food was amazing!",
         /// }
         /// </example>
         [HttpPost]
         [EnableCors(origins: "*", methods: "*", headers: "*")]
-        public void AddAuthor([FromBody] Author NewAuthor)
+        public void AddArticle([FromBody] Article NewArticle)
         {
             //Exit method if model fields are not included.
-            if (!NewAuthor.IsValid()) throw new ApplicationException("Posted Data was not valid.");
+            if (!NewArticle.IsValid()) throw new ApplicationException("Posted Data was not valid.");
 
             try
             {
@@ -253,11 +251,11 @@ namespace BlogProject.Controllers
                 MySqlCommand cmd = Conn.CreateCommand();
 
                 //SQL QUERY
-                cmd.CommandText = "insert into authors (authorfname, authorlname, authorbio, authorjoindate, authoremail) values (@AuthorFname,@AuthorLname,@AuthorBio, CURRENT_DATE(), @AuthorEmail)";
-                cmd.Parameters.AddWithValue("@AuthorFname", NewAuthor.AuthorFname);
-                cmd.Parameters.AddWithValue("@AuthorLname", NewAuthor.AuthorLname);
-                cmd.Parameters.AddWithValue("@AuthorBio", NewAuthor.AuthorBio);
-                cmd.Parameters.AddWithValue("@AuthorEmail", NewAuthor.AuthorEmail);
+                cmd.CommandText = "insert into Articles (articletitle, articlebody, articledate) values (@articletitle,@articlebody, current_date())";
+                cmd.Parameters.AddWithValue("@articletitle", NewArticle.ArticleTitle);
+                cmd.Parameters.AddWithValue("@articlebody", NewArticle.ArticleBody);
+
+
                 cmd.Prepare();
 
                 cmd.ExecuteNonQuery();
@@ -288,27 +286,25 @@ namespace BlogProject.Controllers
         }
 
         /// <summary>
-        /// Updates an Author on the MySQL Database. Non-Deterministic.
+        /// Updates an Article on the MySQL Database. Non-Deterministic.
         /// </summary>
-        /// <param name="AuthorInfo">An object with fields that map to the columns of the author's table.</param>
+        /// <param name="ArticleInfo">An object with fields that map to the columns of the Article's table.</param>
         /// <example>
-        /// POST api/AuthorData/UpdateAuthor/208 
+        /// POST api/ArticleData/UpdateArticle/208 
         /// FORM DATA / POST DATA / REQUEST BODY 
         /// {
-        ///	"AuthorFname":"Christine",
-        ///	"AuthorLname":"Bittle",
-        ///	"AuthorBio":"Likes Coding!",
-        ///	"AuthorEmail":"christine@test.ca"
+        ///	"ArticleTitle":"My Sound Adventure in Italy",
+        ///	"ArticleBody":"I really enjoyed Italy. The food was amazing!",
         /// }
         /// </example>
         [HttpPost]
         [EnableCors(origins: "*", methods: "*", headers: "*")]
-        public void UpdateAuthor(int id, [FromBody]Author AuthorInfo)
+        public void UpdateArticle(int id, [FromBody] Article ArticleInfo)
         {
-            
+
 
             //Exit method if model fields are not included.
-            if (!AuthorInfo.IsValid()) throw new ApplicationException("Posted Data was not valid.");
+            if (!ArticleInfo.IsValid()) throw new ApplicationException("Posted Data was not valid.");
 
             try
             {
@@ -319,12 +315,10 @@ namespace BlogProject.Controllers
                 MySqlCommand cmd = Conn.CreateCommand();
 
                 //SQL QUERY
-                cmd.CommandText = "UPDATE authors SET authorfname=@AuthorFname, authorlname=@AuthorLname, authorbio=@AuthorBio, authoremail=@AuthorEmail WHERE authorid=@AuthorId";
-                cmd.Parameters.AddWithValue("@AuthorFname", AuthorInfo.AuthorFname);
-                cmd.Parameters.AddWithValue("@AuthorLname", AuthorInfo.AuthorLname);
-                cmd.Parameters.AddWithValue("@AuthorBio", AuthorInfo.AuthorBio);
-                cmd.Parameters.AddWithValue("@AuthorEmail", AuthorInfo.AuthorEmail);
-                cmd.Parameters.AddWithValue("@AuthorId", id);
+                cmd.CommandText = "UPDATE Articles SET articletitle=@articletitle, articlebody=@articlebody WHERE articleid=@ArticleId";
+                cmd.Parameters.AddWithValue("@articletitle", ArticleInfo.ArticleTitle);
+                cmd.Parameters.AddWithValue("@articlebody", ArticleInfo.ArticleBody);
+                cmd.Parameters.AddWithValue("@ArticleId", id);
                 cmd.Prepare();
 
                 cmd.ExecuteNonQuery();
@@ -350,6 +344,7 @@ namespace BlogProject.Controllers
             }
 
         }
+
 
     }
 }

@@ -208,15 +208,24 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\ArticleController.cs" />
+    <Compile Include="Controllers\ArticleDataController.cs" />
     <Compile Include="Controllers\AuthorController.cs" />
     <Compile Include="Controllers\AuthorDataController.cs" />
+    <Compile Include="Controllers\CommentController.cs" />
+    <Compile Include="Controllers\CommentDataController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TagController.cs" />
+    <Compile Include="Controllers\TagDataController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Article.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\BlogDbContext.cs" />
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\Tag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -277,9 +286,15 @@
     <Content Include="Views\Author\Update.cshtml" />
     <Content Include="Views\Author\Ajax_New.cshtml" />
     <Content Include="Views\Author\Ajax_Update.cshtml" />
+    <Content Include="Views\Home\Error.cshtml" />
+    <Content Include="Views\Author\Error.cshtml" />
+    <Content Include="Views\Author\Ajax_List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Article\" />
+    <Folder Include="Views\Comment\" />
+    <Folder Include="Views\Tag\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

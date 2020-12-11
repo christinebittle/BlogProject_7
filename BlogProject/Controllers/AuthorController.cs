@@ -10,8 +10,20 @@ namespace BlogProject.Controllers
 {
     public class AuthorController : Controller
     {
+        //We can instantiate the authorcontroller outside of each method
+        private AuthorDataController controller = new AuthorDataController();
+
         // GET: Author
         public ActionResult Index()
+        {
+            return View();
+        }
+
+        //GET : /Author/Error
+        /// <summary>
+        /// This window is for showing Author Specific Errors!
+        /// </summary>
+        public ActionResult Error()
         {
             return View();
         }
@@ -19,29 +31,55 @@ namespace BlogProject.Controllers
         //GET : /Author/List
         public ActionResult List(string SearchKey = null)
         {
-            AuthorDataController controller = new AuthorDataController();
-            IEnumerable<Author> Authors = controller.ListAuthors(SearchKey);
-            return View(Authors);
+            try{
+                //Try to get a list of authors.
+                IEnumerable<Author> Authors = controller.ListAuthors(SearchKey);
+                return View(Authors);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                //Debug.WriteLine(ex.Message);
+                return RedirectToAction("Error","Home");
+            }
         }
+
+        //GET : /Author/Ajax_List
+        public ActionResult Ajax_List()
+        {
+            return View();
+        }
+         
 
         //GET : /Author/Show/{id}
         public ActionResult Show(int id)
         {
-            AuthorDataController controller = new AuthorDataController();
-            Author SelectedAuthor = controller.FindAuthor(id);
-            
-
-            return View(SelectedAuthor);
+            try
+            {
+                Author SelectedAuthor = controller.FindAuthor(id);
+                return View(SelectedAuthor);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         //GET : /Author/DeleteConfirm/{id}
         public ActionResult DeleteConfirm(int id)
         {
-            AuthorDataController controller = new AuthorDataController();
-            Author NewAuthor = controller.FindAuthor(id);
+            try
+            {
+                Author NewAuthor = controller.FindAuthor(id);
+                return View(NewAuthor);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("Error", "Home");
+            }
 
-
-            return View(NewAuthor);
         }
 
 
@@ -49,9 +87,17 @@ namespace BlogProject.Controllers
         [HttpPost]
         public ActionResult Delete(int id)
         {
-            AuthorDataController controller = new AuthorDataController();
-            controller.DeleteAuthor(id);
-            return RedirectToAction("List");
+            try
+            {
+                controller.DeleteAuthor(id);
+                return RedirectToAction("List");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("Error", "Home");
+            }
+
         }
 
         //GET : /Author/New
@@ -70,22 +116,21 @@ namespace BlogProject.Controllers
         [HttpPost]
         public ActionResult Create(string AuthorFname, string AuthorLname, string AuthorBio, string AuthorEmail)
         {
-            //Identify that this method is running
-            //Identify the inputs provided from the form
+            try
+            {
+                Author NewAuthor = new Author();
+                NewAuthor.AuthorFname = AuthorFname;
+                NewAuthor.AuthorLname = AuthorLname;
+                NewAuthor.AuthorBio = AuthorBio;
+                NewAuthor.AuthorEmail = AuthorEmail;
+                controller.AddAuthor(NewAuthor);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("Error", "Home");
+            }
 
-            Debug.WriteLine("I have accessed the Create Method!");
-            Debug.WriteLine(AuthorFname);
-            Debug.WriteLine(AuthorLname);
-            Debug.WriteLine(AuthorBio);
-
-            Author NewAuthor = new Author();
-            NewAuthor.AuthorFname = AuthorFname;
-            NewAuthor.AuthorLname = AuthorLname;
-            NewAuthor.AuthorBio = AuthorBio;
-            NewAuthor.AuthorEmail = AuthorEmail;
-
-            AuthorDataController controller = new AuthorDataController();
-            controller.AddAuthor(NewAuthor);
 
             return RedirectToAction("List");
         }
@@ -99,18 +144,36 @@ namespace BlogProject.Controllers
         /// <example>GET : /Author/Update/5</example>
         public ActionResult Update(int id)
         {
-            AuthorDataController controller = new AuthorDataController();
-            Author SelectedAuthor = controller.FindAuthor(id);
+            try
+            {
+                Author SelectedAuthor = controller.FindAuthor(id);
+                return View(SelectedAuthor);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("Error", "Home");
+            }
 
-            return View(SelectedAuthor);
         }
 
+        /// <summary>
+        /// Routes to a dynamically rendered "Ajax Update" Page. The "Ajax Update" page will utilize JavaScript to send an HTTP Request to the data access layer (/api/AuthorData/UpdateAuthor)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Ajax_Update(int id)
         {
-            AuthorDataController controller = new AuthorDataController();
-            Author SelectedAuthor = controller.FindAuthor(id);
-
-            return View(SelectedAuthor);
+            try
+            {
+                Author SelectedAuthor = controller.FindAuthor(id);
+                return View(SelectedAuthor);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("Error", "Home");
+            }
         }
 
 
@@ -136,14 +199,21 @@ namespace BlogProject.Controllers
         [HttpPost]
         public ActionResult Update(int id, string AuthorFname, string AuthorLname, string AuthorBio, string AuthorEmail)
         {
-            Author AuthorInfo = new Author();
-            AuthorInfo.AuthorFname = AuthorFname;
-            AuthorInfo.AuthorLname = AuthorLname;
-            AuthorInfo.AuthorBio = AuthorBio;
-            AuthorInfo.AuthorEmail = AuthorEmail;
+            try
+            {
+                Author AuthorInfo = new Author();
+                AuthorInfo.AuthorFname = AuthorFname;
+                AuthorInfo.AuthorLname = AuthorLname;
+                AuthorInfo.AuthorBio = AuthorBio;
+                AuthorInfo.AuthorEmail = AuthorEmail;
+                controller.UpdateAuthor(id, AuthorInfo);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("Error", "Home");
+            }
 
-            AuthorDataController controller = new AuthorDataController();
-            controller.UpdateAuthor(id, AuthorInfo);
 
             return RedirectToAction("Show/" + id);
         }

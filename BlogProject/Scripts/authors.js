@@ -1,7 +1,55 @@
 ﻿// AJAX for author Add can go in here!
 // This file is connected to the project via Shared/_Layout.cshtml
 
+// This function attaches a timer object to the input window.
+// When the timer expires (300ms), the search executes.
+// Prevents a search on each key up for fast typers.
+function _ListAuthors(d) {
 
+	if (d.timer) clearTimeout(d.timer);
+	d.timer = setTimeout(function () { ListAuthors(d.value); }, 300);
+}
+
+//The actual List Authors Method.
+function ListAuthors(SearchKey) {
+
+	var URL = "http://localhost:51326/api/AuthorData/ListAuthors/"+SearchKey;
+
+	var rq = new XMLHttpRequest();
+	rq.open("GET", URL, true);
+	rq.setRequestHeader("Content-Type", "application/json");
+	rq.onreadystatechange = function () {
+		//ready state should be 4 AND status should be 200
+		if (rq.readyState == 4 && rq.status == 200) {
+			//request is successful and the request is finished
+			
+
+			var authors = JSON.parse(rq.responseText)
+			var listauthors = document.getElementById("listauthors");
+			listauthors.innerHTML = "";
+
+			//renders content for each author pulled from the API call
+			for (var i = 0; i < authors.length; i++)
+			{
+				var row = document.createElement("div");
+				row.classList = "listitem row";
+				var col = document.createElement("col");
+				col.classList = "col-md-12";
+				var link = document.createElement("a");
+				link.href = "/Author/Show/" + authors[i].AuthorId;
+				link.innerHTML = authors[i].AuthorFname + " " + authors[i].AuthorLname;
+
+				col.appendChild(link);
+				row.appendChild(col);
+				listauthors.appendChild(row);
+
+            }
+		}
+
+	}
+	//POST information sent through the .send() method
+	rq.send();
+}
 
 // Usually Validation functions for Add and Update are separated.
 // You can run into situations where information added is no longer updated, or vice versa
