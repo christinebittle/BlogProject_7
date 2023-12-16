@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using BlogProject.Models;
 using System.Diagnostics;
+using BlogProject.Models.ViewModels;
 
 namespace BlogProject.Controllers
 {
@@ -12,7 +13,11 @@ namespace BlogProject.Controllers
     {
 
         //We can instantiate the Articlecontroller outside of each method
-        private ArticleDataController controller = new ArticleDataController();
+        private ArticleDataController articlecontroller = new ArticleDataController();
+
+        private TagDataController tagcontroller = new TagDataController();
+
+        private CommentDataController commentcontroller = new CommentDataController();
 
         //GET : /Article/Error
         /// <summary>
@@ -29,7 +34,7 @@ namespace BlogProject.Controllers
             try
             {
                 //Try to get a list of Articles.
-                IEnumerable<Article> Articles = controller.ListArticles(SearchKey);
+                IEnumerable<Article> Articles = articlecontroller.ListArticles(SearchKey);
                 return View(Articles);
             }
             catch (Exception ex)
@@ -45,8 +50,22 @@ namespace BlogProject.Controllers
         {
             try
             {
-                Article SelectedArticle = controller.FindArticle(id);
-                return View(SelectedArticle);
+                ShowArticle ViewModel = new ShowArticle();
+
+                Article SelectedArticle = articlecontroller.FindArticle(id);
+
+                ViewModel.SelectedArticle = SelectedArticle;
+
+                //The comments associated to the article
+
+                IEnumerable<Comment> CommentsPosted = commentcontroller.ListCommentsForArticle(id);
+
+                ViewModel.CommentsPosted = CommentsPosted;
+
+                //which controller should we build ListTagsForArticle?
+                ViewModel.TagsAssociated = tagcontroller.ListTagsForArticle(id);
+
+                return View(ViewModel);
             }
             catch (Exception ex)
             {
@@ -60,7 +79,7 @@ namespace BlogProject.Controllers
         {
             try
             {
-                Article NewArticle = controller.FindArticle(id);
+                Article NewArticle = articlecontroller.FindArticle(id);
                 return View(NewArticle);
             }
             catch (Exception ex)
@@ -77,7 +96,7 @@ namespace BlogProject.Controllers
         {
             try
             {
-                controller.DeleteArticle(id);
+                articlecontroller.DeleteArticle(id);
                 return RedirectToAction("List");
             }
             catch (Exception ex)
@@ -103,8 +122,8 @@ namespace BlogProject.Controllers
                 Article NewArticle = new Article();
                 NewArticle.ArticleTitle = ArticleTitle;
                 NewArticle.ArticleBody = ArticleBody;
-                
-                controller.AddArticle(NewArticle);
+
+                articlecontroller.AddArticle(NewArticle);
             }
             catch (Exception ex)
             {
@@ -127,7 +146,7 @@ namespace BlogProject.Controllers
         {
             try
             {
-                Article SelectedArticle = controller.FindArticle(id);
+                Article SelectedArticle = articlecontroller.FindArticle(id);
                 return View(SelectedArticle);
             }
             catch (Exception ex)
@@ -148,7 +167,7 @@ namespace BlogProject.Controllers
                 NewArticle.ArticleTitle = ArticleTitle;
                 NewArticle.ArticleBody = ArticleBody;
 
-                controller.UpdateArticle(id, NewArticle);
+                articlecontroller.UpdateArticle(id, NewArticle);
             }
             catch (Exception ex)
             {

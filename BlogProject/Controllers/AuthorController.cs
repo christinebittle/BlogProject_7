@@ -66,8 +66,8 @@ namespace BlogProject.Controllers
                 ShowAuthor ViewModel = new ShowAuthor();
 
                 Author SelectedAuthor = authordatacontroller.FindAuthor(id);
-                IEnumerable<Article> ArticlesWritten = articledatacontroller.GetArticlesForAuthor(id);
-                IEnumerable<Comment> CommentsWritten = commentdatacontroller.GetCommentsForAuthor(id);
+                IEnumerable<Article> ArticlesWritten = articledatacontroller.ListArticlesForAuthor(id);
+                IEnumerable<Comment> CommentsWritten = commentdatacontroller.ListCommentsForAuthor(id);
                 ViewModel.Author = SelectedAuthor;
                 ViewModel.ArticlesWritten = ArticlesWritten;
                 ViewModel.CommentsWritten = CommentsWritten;

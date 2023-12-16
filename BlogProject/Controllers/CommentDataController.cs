@@ -8,6 +8,7 @@ using BlogProject.Models;
 using MySql.Data.MySqlClient;
 using System.Web.Http.Cors;
 using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace BlogProject.Controllers
 {
@@ -19,7 +20,7 @@ namespace BlogProject.Controllers
         MySqlConnection Conn = BlogDbContext.AccessDatabase();
 
 
-        //This Controller Will access the Comments table of our blog database. Non-Deterministic.
+        //This Controller Will access the Comments table of our blog database. 
         /// <summary>
         /// Returns a list of Comments in the system
         /// </summary>
@@ -99,14 +100,19 @@ namespace BlogProject.Controllers
 
 
         /// <summary>
-        /// returns a list of comments made by that author
+        /// Returns a list of comments made by that author
         /// </summary>
         /// <param name="AuthorId">The primary key of the  author</param>
-        /// <returns></returns>
+        /// <returns>
+        /// A list of comment objects related to that author
+        /// </returns>
+        /// <example>
+        /// GET api/CommentData/ListCommentsForAuthor/3 -> [{Comment Object},{Comment Object},..]
+        /// </example>
         [HttpGet]
-        [Route("api/CommentData/ListComments/{AuthorId}")]
+        [Route("api/CommentData/ListCommentsForAuthor/{AuthorId}")]
         [EnableCors(origins: "*", methods: "*", headers: "*")]
-        public IEnumerable<Comment> GetCommentsForAuthor(int AuthorId)
+        public IEnumerable<Comment> ListCommentsForAuthor(int AuthorId)
         {
             //Create an empty list of Comments
             List<Comment> Comments = new List<Comment> { };
@@ -174,7 +180,7 @@ namespace BlogProject.Controllers
         }
 
         /// <summary>
-        /// Finds an Comment from the MySQL Database through an id. Non-Deterministic.
+        /// Finds an Comment from the MySQL Database through an id. 
         /// </summary>
         /// <param name="id">The Comment ID</param>
         /// <returns>Comment object containing information about the Comment with a matching ID. Empty Comment Object if the ID does not match any Comments in the system.</returns>
@@ -255,7 +261,7 @@ namespace BlogProject.Controllers
 
 
         /// <summary>
-        /// Deletes an Comment from the connected MySQL Database if the ID of that Comment exists. Does NOT maintain relational integrity. Non-Deterministic.
+        /// Deletes an Comment from the connected MySQL Database if the ID of that Comment exists. Does NOT maintain relational integrity. 
         /// </summary>
         /// <param name="id">The ID of the Comment.</param>
         /// <example>POST /api/CommentData/DeleteComment/3</example>
@@ -299,7 +305,7 @@ namespace BlogProject.Controllers
         }
 
         /// <summary>
-        /// Adds an Comment to the MySQL Database. Non-Deterministic.
+        /// Adds an Comment to the MySQL Database. 
         /// </summary>
         /// <param name="NewComment">An object with fields that map to the columns of the Comment's table. </param>
         /// <example>
@@ -315,7 +321,7 @@ namespace BlogProject.Controllers
         public void AddComment([FromBody] Comment NewComment)
         {
             //Exit method if model fields are not included.
-            if (!NewComment.IsValid()) throw new ApplicationException("Posted Data was not valid.");
+            if (!NewComment.IsValid()) return;
 
             try
             {
@@ -361,7 +367,7 @@ namespace BlogProject.Controllers
         }
 
         /// <summary>
-        /// Updates an Comment on the MySQL Database. Non-Deterministic.
+        /// Updates an Comment on the MySQL Database. 
         /// </summary>
         /// <param name="CommentInfo">An object with fields that map to the columns of the Comment's table.</param>
         /// <example>
@@ -379,7 +385,7 @@ namespace BlogProject.Controllers
 
 
             //Exit method if model fields are not included.
-            if (!CommentInfo.IsValid()) throw new ApplicationException("Posted Data was not valid.");
+            if (!CommentInfo.IsValid()) return;
 
             try
             {
@@ -417,6 +423,65 @@ namespace BlogProject.Controllers
                 Conn.Close();
 
             }
+
+        }
+
+        /// <summary>
+        /// Receives an article id and outputs the comments associated with an article
+        /// </summary>
+        /// <param name="articleid">The foreign key article id</param>
+        /// <returns>
+        /// comments associated with the article
+        /// </returns>
+        /// <example>
+        /// GET api/CommentData/ListCommentsForArticle/5 => [{"CommentId":"1", "CommentDesc":"That was a great article"},{"CommentId":"2", "CommentDesc":"That was an okay article"}]
+        /// </example>
+        [HttpGet]
+        [Route("api/CommentData/ListCommentsForArticle/{articleid}")]
+        public IEnumerable<Comment> ListCommentsForArticle(int articleid)
+        {
+            Conn.Open();
+
+            MySqlCommand Cmd = Conn.CreateCommand();
+
+            string query = "select * from comments where articleid=@id";
+
+            Cmd.CommandText = query;
+
+            Cmd.Parameters.AddWithValue("@id", articleid);
+
+            Cmd.Prepare();
+
+            //Gather Result Set of Query into a variable
+
+            MySqlDataReader ResultSet = Cmd.ExecuteReader();
+
+            List<Comment> Comments = new List<Comment>();
+
+            //Loop Through Each Row the Result Set               
+            while (ResultSet.Read())
+            {
+                //Access Column information by the DB column name as an index
+                int CommentId = Convert.ToInt32(ResultSet["Commentid"]);
+                string CommentDesc = ResultSet["commentdesc"].ToString();
+                DateTime CommentDate = (DateTime)ResultSet["Commentdate"];
+                int CommentRating = Convert.ToInt32(ResultSet["CommentRating"]);
+
+
+                Comment NewComment = new Comment();
+                NewComment.CommentId = CommentId;
+                NewComment.CommentDesc = CommentDesc;
+                NewComment.CommentRating = CommentRating;
+                NewComment.CommentDate = CommentDate;
+
+                //Add the Comment Name to the List
+                Comments.Add(NewComment);
+            }
+
+            Conn.Close();
+
+
+            return Comments;
 
         }
 

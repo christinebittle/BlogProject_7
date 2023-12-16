@@ -75,7 +75,6 @@
     <Reference Include="System.ComponentModel" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Management" />
@@ -99,7 +98,6 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http.Cors, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.7\lib\net45\System.Web.Http.Cors.dll</HintPath>
     </Reference>
@@ -226,6 +224,7 @@
     <Compile Include="Models\BlogDbContext.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\ViewModels\ShowArticle.cs" />
     <Compile Include="Models\ViewModels\ShowAuthor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

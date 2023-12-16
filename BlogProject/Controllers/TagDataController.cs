@@ -19,7 +19,7 @@ namespace BlogProject.Controllers
         MySqlConnection Conn = BlogDbContext.AccessDatabase();
 
 
-        //This Controller Will access the Tags table of our blog database. Non-Deterministic.
+        //This Controller Will access the Tags table of our blog database. 
         /// <summary>
         /// Returns a list of Tags in the system
         /// </summary>
@@ -97,7 +97,7 @@ namespace BlogProject.Controllers
 
 
         /// <summary>
-        /// Finds an Tag from the MySQL Database through an id. Non-Deterministic.
+        /// Finds an Tag from the MySQL Database through an id. 
         /// </summary>
         /// <param name="id">The Tag ID</param>
         /// <returns>Tag object containing information about the Tag with a matching ID. Empty Tag Object if the ID does not match any Tags in the system.</returns>
@@ -174,7 +174,7 @@ namespace BlogProject.Controllers
 
 
         /// <summary>
-        /// Deletes an Tag from the connected MySQL Database if the ID of that Tag exists. Does NOT maintain relational integrity. Non-Deterministic.
+        /// Deletes an Tag from the connected MySQL Database if the ID of that Tag exists. Does NOT maintain relational integrity. 
         /// </summary>
         /// <param name="id">The ID of the Tag.</param>
         /// <example>POST /api/TagData/DeleteTag/3</example>
@@ -218,7 +218,7 @@ namespace BlogProject.Controllers
         }
 
         /// <summary>
-        /// Adds an Tag to the MySQL Database. Non-Deterministic.
+        /// Adds an Tag to the MySQL Database. 
         /// </summary>
         /// <param name="NewTag">An object with fields that map to the columns of the Tag's table. </param>
         /// <example>
@@ -234,7 +234,7 @@ namespace BlogProject.Controllers
         public void AddTag([FromBody] Tag NewTag)
         {
             //Exit method if model fields are not included.
-            if (!NewTag.IsValid()) throw new ApplicationException("Posted Data was not valid.");
+            if (!NewTag.IsValid()) return;
 
             try
             {
@@ -280,7 +280,7 @@ namespace BlogProject.Controllers
         }
 
         /// <summary>
-        /// Updates an Tag on the MySQL Database. Non-Deterministic.
+        /// Updates an Tag on the MySQL Database. 
         /// </summary>
         /// <param name="TagInfo">An object with fields that map to the columns of the Tag's table.</param>
         /// <example>
@@ -298,7 +298,7 @@ namespace BlogProject.Controllers
 
 
             //Exit method if model fields are not included.
-            if (!TagInfo.IsValid()) throw new ApplicationException("Posted Data was not valid.");
+            if (!TagInfo.IsValid()) return;
 
             try
             {
@@ -336,6 +336,65 @@ namespace BlogProject.Controllers
                 Conn.Close();
 
             }
+
+        }
+
+
+        /// <summary>
+        /// Lists the tags associated to a particular article
+        /// </summary>
+        /// <param name="articleid">the article id</param>
+        /// <returns>all tags associated with that article</returns>
+        /// <example>
+        /// GET api/tagdata/listtagsforarticle/10 ->
+        /// [{"TagId":1,"TagColor":"#ffffff","TagName":"LifeStyle"},{"TagId":2,"TagColor":"#ffff0f","TagName":"Adventure"}]
+
+        /// </example> 
+        [HttpGet]
+        [Route("api/Tagdata/ListTagsForArticle/{articleid}")]
+        public IEnumerable<Tag> ListTagsForArticle(int articleid)
+        {
+            string query = "select tags.tagid, tagname, tagcolor from articlesxtags inner join tags on articlesxtags.tagid=tags.tagid where articleid=@id";
+
+            //Try to open the connection between the web server and database
+            Conn.Open();
+
+            //Establish a new command (query) for our database
+            MySqlCommand cmd = Conn.CreateCommand();
+
+            //SQL QUERY
+            cmd.CommandText = query;
+
+            cmd.Parameters.AddWithValue("@id", articleid);
+            cmd.Prepare();
+
+            //Gather Result Set of Query into a variable
+
+            MySqlDataReader ResultSet = cmd.ExecuteReader();
+
+            List<Tag> Tags = new List<Tag>();
+
+            //Loop Through Each Row the Result Set               
+            while (ResultSet.Read())
+            {
+                //Access Column information by the DB column name as an index
+                int TagId = Convert.ToInt32(ResultSet["Tagid"]);
+                string TagName = ResultSet["tagname"].ToString();
+                string TagColor = ResultSet["tagcolor"].ToString();
+
+
+                Tag NewTag = new Tag();
+                NewTag.TagId = TagId;
+                NewTag.TagName = TagName;
+                NewTag.TagColor = TagColor;
+
+                //Add the Tag Name to the List
+                Tags.Add(NewTag);
+            }
+
+            Conn.Close();
+
+            return Tags;
 
         }
 

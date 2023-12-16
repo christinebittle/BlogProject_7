@@ -19,7 +19,7 @@ namespace BlogProject.Controllers
         MySqlConnection Conn = BlogDbContext.AccessDatabase();
 
 
-        //This Controller Will access the Articles table of our blog database. Non-Deterministic.
+        //This Controller Will access the Articles table of our blog database. 
         /// <summary>
         /// Returns a list of Articles in the system
         /// </summary>
@@ -102,11 +102,16 @@ namespace BlogProject.Controllers
         /// Returns a list of articles which are written by an inputted author
         /// </summary>
         /// <param name="AuthorId">the author id primary key</param>
-        /// <returns></returns>
+        /// <returns>
+        /// A list of article objects related to that author.
+        /// </returns>
+        /// <example>
+        /// GET api/AuthorData/ListArticlesForAuthor/5 -> [{Article Object},{Article Object},..]
+        /// </example>
         [HttpGet]
-        [Route("api/ArticleData/ListArticles/{AuthorId}")]
+        [Route("api/ArticleData/ListArticlesForAuthor/{AuthorId}")]
         [EnableCors(origins: "*", methods: "*", headers: "*")]
-        public IEnumerable<Article> GetArticlesForAuthor(int AuthorId)
+        public IEnumerable<Article> ListArticlesForAuthor(int AuthorId)
         {
             //Create an empty list of Articles
             List<Article> Articles = new List<Article> { };
@@ -174,7 +179,7 @@ namespace BlogProject.Controllers
         }
 
         /// <summary>
-        /// Finds an Article from the MySQL Database through an id. Non-Deterministic.
+        /// Finds an Article from the MySQL Database through an id. 
         /// </summary>
         /// <param name="id">The Article ID</param>
         /// <returns>Article object containing information about the Article with a matching ID. Empty Article Object if the ID does not match any Articles in the system.</returns>
@@ -255,7 +260,7 @@ namespace BlogProject.Controllers
 
 
         /// <summary>
-        /// Deletes an Article from the connected MySQL Database if the ID of that Article exists. Does NOT maintain relational integrity. Non-Deterministic.
+        /// Deletes an Article from the connected MySQL Database if the ID of that Article exists. Does NOT maintain relational integrity. 
         /// </summary>
         /// <param name="id">The ID of the Article.</param>
         /// <example>POST /api/ArticleData/DeleteArticle/3</example>
@@ -299,7 +304,7 @@ namespace BlogProject.Controllers
         }
 
         /// <summary>
-        /// Adds an Article to the MySQL Database. Non-Deterministic.
+        /// Adds an Article to the MySQL Database. 
         /// </summary>
         /// <param name="NewArticle">An object with fields that map to the columns of the Article's table. </param>
         /// <example>
@@ -315,7 +320,7 @@ namespace BlogProject.Controllers
         public void AddArticle([FromBody] Article NewArticle)
         {
             //Exit method if model fields are not included.
-            if (!NewArticle.IsValid()) throw new ApplicationException("Posted Data was not valid.");
+            if (!NewArticle.IsValid()) return;
 
             try
             {
@@ -361,7 +366,7 @@ namespace BlogProject.Controllers
         }
 
         /// <summary>
-        /// Updates an Article on the MySQL Database. Non-Deterministic.
+        /// Updates an Article on the MySQL Database. 
         /// </summary>
         /// <param name="ArticleInfo">An object with fields that map to the columns of the Article's table.</param>
         /// <example>
@@ -379,7 +384,7 @@ namespace BlogProject.Controllers
 
 
             //Exit method if model fields are not included.
-            if (!ArticleInfo.IsValid()) throw new ApplicationException("Posted Data was not valid.");
+            if (!ArticleInfo.IsValid()) return;
 
             try
             {

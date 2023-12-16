@@ -1,4 +1,4 @@
-﻿@model BlogProject.Models.Article
+﻿@model BlogProject.Models.ViewModels.ShowArticle
 @{
     ViewBag.Title = "Show";
 }
@@ -7,10 +7,27 @@
 <div id="containershow">
     <nav>
         <a class="navlink" href="/Article/List">Back To Articles</a>
-        <a class="dellink" href="/Article/DeleteConfirm/@Model.ArticleId">Delete</a>
-        <a class="navlink" href="/Article/Update/@Model.ArticleId">Update</a>
+        <a class="dellink" href="/Article/DeleteConfirm/@Model.SelectedArticle.ArticleId">Delete</a>
+        <a class="navlink" href="/Article/Update/@Model.SelectedArticle.ArticleId">Update</a>
     </nav>
-    <h2>@Model.ArticleTitle</h2>
-    <p style="font-style:italic;">Posted On @Model.ArticleDate.ToString("dd-MMM-yyyy")</p>
-    <p>@Model.ArticleBody</p>
+    <h2>@Model.SelectedArticle.ArticleTitle</h2>
+    <p>
+        @foreach(BlogProject.Models.Tag Tag in Model.TagsAssociated)
+        {
+            <span style="color:black; background:#@Tag.TagColor; padding:3px 5px; border-radius:2px;">@Tag.TagName</span>
+
+        }
+
+    </p>
+    <p style="font-style:italic;">Posted On @Model.SelectedArticle.ArticleDate.ToString("dd-MMM-yyyy")</p>
+    <p>@Model.SelectedArticle.ArticleBody</p>
+
+    <div>
+        <em>Comments (@Model.CommentsPosted.Count())</em>
+        @foreach(BlogProject.Models.Comment Comment in Model.CommentsPosted)
+        {
+            <p>@Comment.CommentDesc</p>
+
+        }
+    </div>
 </div>

@@ -18,7 +18,7 @@ namespace BlogProject.Controllers
         MySqlConnection Conn = BlogDbContext.AccessDatabase();
 
 
-        //This Controller Will access the authors table of our blog database. Non-Deterministic.
+        //This Controller Will access the authors table of our blog database. 
         /// <summary>
         /// Returns a list of Authors in the system
         /// </summary>
@@ -99,7 +99,7 @@ namespace BlogProject.Controllers
 
 
         /// <summary>
-        /// Finds an author from the MySQL Database through an id. Non-Deterministic.
+        /// Finds an author from the MySQL Database through an id. 
         /// </summary>
         /// <param name="id">The Author ID</param>
         /// <returns>Author object containing information about the author with a matching ID. Empty Author Object if the ID does not match any authors in the system.</returns>
@@ -180,7 +180,7 @@ namespace BlogProject.Controllers
 
 
         /// <summary>
-        /// Deletes an Author from the connected MySQL Database if the ID of that author exists. Does NOT maintain relational integrity. Non-Deterministic.
+        /// Deletes an Author from the connected MySQL Database if the ID of that author exists. Does NOT maintain relational integrity. 
         /// </summary>
         /// <param name="id">The ID of the author.</param>
         /// <example>POST /api/AuthorData/DeleteAuthor/3</example>
@@ -224,7 +224,7 @@ namespace BlogProject.Controllers
         }
 
         /// <summary>
-        /// Adds an Author to the MySQL Database. Non-Deterministic.
+        /// Adds an Author to the MySQL Database. 
         /// </summary>
         /// <param name="NewAuthor">An object with fields that map to the columns of the author's table. </param>
         /// <example>
@@ -242,7 +242,7 @@ namespace BlogProject.Controllers
         public void AddAuthor([FromBody] Author NewAuthor)
         {
             //Exit method if model fields are not included.
-            if (!NewAuthor.IsValid()) throw new ApplicationException("Posted Data was not valid.");
+            if (!NewAuthor.IsValid()) return;
 
             try
             {
@@ -288,7 +288,7 @@ namespace BlogProject.Controllers
         }
 
         /// <summary>
-        /// Updates an Author on the MySQL Database. Non-Deterministic.
+        /// Updates an Author on the MySQL Database. 
         /// </summary>
         /// <param name="AuthorInfo">An object with fields that map to the columns of the author's table.</param>
         /// <example>
@@ -305,10 +305,10 @@ namespace BlogProject.Controllers
         [EnableCors(origins: "*", methods: "*", headers: "*")]
         public void UpdateAuthor(int id, [FromBody]Author AuthorInfo)
         {
-            
+
 
             //Exit method if model fields are not included.
-            if (!AuthorInfo.IsValid()) throw new ApplicationException("Posted Data was not valid.");
+            if (!AuthorInfo.IsValid()) return;
 
             try
             {
